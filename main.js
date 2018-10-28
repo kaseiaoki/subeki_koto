@@ -1,10 +1,17 @@
 
-
 let message = 'text';
 let json;
 let isItem = JSON.parse(localStorage.getItem('items'));
 
 window.onload = (getCard());
+
+Object.prototype.push = function (values) {
+    var result = this;
+    for (let key in values) {
+        result[key] = values[key];
+    }
+    return result;
+};
 
 function getCard(){
     let messageArray =[];
@@ -37,8 +44,13 @@ function clearAll() {
 function sendTask() {
     let task = document.getElementById("taskText");
     let item = task.value;
-    let itmeid = isItem.length;
-    localStorage.setItem('items',JSON.stringify({'item': item}));
+    if(isItem == null){
+        localStorage.setItem('items',JSON.stringify({ 1 : item}));
+    }else{
+        let i =  Object.keys(isItem).length+1;
+        isItem.push({ [i] : item})
+        localStorage.setItem('items',JSON.stringify(isItem));
+    }
 }
 
 const da = document.getElementById("clearAll");
@@ -47,8 +59,13 @@ da.addEventListener("click", clearAll, false);
 const st = document.getElementById("send");
 st.addEventListener("click", sendTask, false);
 
-
+function changeStorage() {
+    isItem = JSON.parse(localStorage.getItem('items'));
+    console.log("hoge");
+    getCard();
+}
 (window.onload = function() {
+    window.addEventListener('storage', changeStorage);
     document.querySelectorAll('.delete').forEach((elm) => {
         elm.addEventListener('click', (ev) => {
             const target = ev.target.closest('.notification');
