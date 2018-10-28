@@ -1,19 +1,12 @@
 
 let message = 'text';
-let json;
 let isItem = JSON.parse(localStorage.getItem('items'));
 
 window.onload = (getCard());
 
-Object.prototype.push = function (values) {
-    var result = this;
-    for (let key in values) {
-        result[key] = values[key];
-    }
-    return result;
-};
 
 function getCard(){
+    isItem = JSON.parse(localStorage.getItem('items'));
     let messageArray =[];
     for(let item in isItem){
         messageArray.push({id:item, text:isItem[item]});
@@ -42,6 +35,15 @@ function clearAll() {
 }
 
 function sendTask() {
+
+    Object.prototype.push = function (values) {
+        var result = this;
+        for (let key in values) {
+            result[key] = values[key];
+        }
+        return result;
+    };
+
     let task = document.getElementById("taskText");
     let item = task.value;
     if(isItem == null){
@@ -51,6 +53,8 @@ function sendTask() {
         isItem.push({ [i] : item})
         localStorage.setItem('items',JSON.stringify(isItem));
     }
+    delete Object.prototype.push;
+    getCard();
 }
 
 const da = document.getElementById("clearAll");
@@ -64,6 +68,7 @@ function changeStorage() {
     console.log("hoge");
     getCard();
 }
+
 (window.onload = function() {
     window.addEventListener('storage', changeStorage);
     document.querySelectorAll('.delete').forEach((elm) => {
